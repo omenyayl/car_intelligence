@@ -13,3 +13,9 @@ or
 ```
 pip install -e .
 ```
+
+You're good to go! Run the demo using
+```
+python demo.py
+```
+yolo weights and config required, but not included.
