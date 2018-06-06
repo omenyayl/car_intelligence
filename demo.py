@@ -11,21 +11,33 @@ model = load_model('full_CNN_model.h5')
 
 
 def main():
-    camera = cv2.VideoCapture(TEST_VIDEO)
+    obj_recognition = False
+    lane_recognition = False
+
+    camera = cv2.VideoCapture(TEST_VIDEO) #For test videos
+    #camera = cv2.VideoCapture(0) #For camera usage
     res, frame = camera.read()
     height, width, layers = frame.shape
+    height = int((height/2)) # For test videos, comment out for cameras
 
     options = {"model": "cfg/yolo.cfg", "load": "bin/yolo.weights", "threshold": 0.3, "gpu": 0.8}
     tfnet = TFNet(options)
 
     while True:
         res, frame = camera.read()
-        frame = frame[0:int((height / 2)), :]
+        frame = frame[:height, :]
         if not res:
             break
 
-        results = tfnet.return_predict(frame)
-        lane_image = road_lines(frame)
+        if obj_recognition:
+            results = tfnet.return_predict(frame)
+        else:
+            results = []
+
+        if lane_recognition:
+            lane_image = road_lines(frame)
+        else:
+            lane_image = frame
 
         for result in results:
             y = result['topleft']['y']
@@ -44,7 +56,12 @@ def main():
 
         cv2.imshow("lane", lane_image)
 
-        if cv2.waitKey(110) & 0xff == 27:
+        key = cv2.waitKey(110)
+        if key == ord("a"):
+            obj_recognition = not obj_recognition
+        if key == ord("b"):
+            lane_recognition = not lane_recognition
+        if key == ord("q") or (key & 0xff) == 27:
             break
 
 
