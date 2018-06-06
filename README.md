@@ -5,6 +5,7 @@ Using code from https://github.com/thtrieu/darkflow to create a vehicle intellig
 git clone https://github.com/omenyayl/car_intelligence/
 cd car_intelligence
 ```
+Then run either:
 ```
 pip install .
 ```
