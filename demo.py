@@ -1,11 +1,17 @@
 import numpy as np
 import cv2
+import sys
 from scipy.misc import imresize
 from keras.models import load_model
+import os
+import urllib.request
 
 from darkflow.net.build import TFNet
 
-TEST_VIDEO = "data/093.MOV"
+TEST_VIDEO = 'data/093.MOV'
+MODEL_PATH = 'cfg/yolo.cfg'
+WEIGHTS_PATH = 'bin/yolo.weights'
+WEIGHTS_DOWNLOAD_DIR = 'https://s3.amazonaws.com/olegpublicbucket/yolo.weights'
 # Load Keras model
 model = load_model('full_CNN_model.h5')
 
@@ -14,13 +20,23 @@ def main():
     obj_recognition = False
     lane_recognition = False
 
-    camera = cv2.VideoCapture(TEST_VIDEO) #For test videos
-    #camera = cv2.VideoCapture(0) #For camera usage
+    camera = cv2.VideoCapture(TEST_VIDEO)  # For test videos
+    # camera = cv2.VideoCapture(0) #For camera usage
     res, frame = camera.read()
-    height, width, layers = frame.shape
-    height = int((height/2)) # For test videos, comment out for cameras
 
-    options = {"model": "cfg/yolo.cfg", "load": "bin/yolo.weights", "threshold": 0.3, "gpu": 0.8}
+    if frame is None:
+        print('Error: TEST_VIDEO not found.')
+        sys.exit(1)
+
+    if not os.path.exists(WEIGHTS_PATH):
+        print('Weights file not found. Downloading the file.')
+        urllib.request.urlretrieve(WEIGHTS_DOWNLOAD_DIR, WEIGHTS_PATH)
+
+    height, width, layers = frame.shape
+    height = int((height / 2))  # For test videos, comment out for cameras
+
+    options = {"model": MODEL_PATH, "load": WEIGHTS_PATH, "threshold": 0.3, "gpu": 0.8}
+
     tfnet = TFNet(options)
 
     while True:
