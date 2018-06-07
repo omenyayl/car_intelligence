@@ -8,7 +8,7 @@ import urllib.request
 
 from darkflow.net.build import TFNet
 
-TEST_VIDEO = 'data/093.MOV'
+TEST_VIDEO = 'data/testvid.MOV'
 MODEL_PATH = 'cfg/yolo.cfg'
 WEIGHTS_PATH = 'bin/yolo.weights'
 WEIGHTS_DOWNLOAD_DIR = 'https://s3.amazonaws.com/olegpublicbucket/yolo.weights'
@@ -20,8 +20,8 @@ def main():
     obj_recognition = False
     lane_recognition = False
 
-    camera = cv2.VideoCapture(TEST_VIDEO)  # For test videos
-    # camera = cv2.VideoCapture(0) #For camera usage
+    #camera = cv2.VideoCapture(TEST_VIDEO)  # For test videos
+    camera = cv2.VideoCapture(0) #For camera usage
     res, frame = camera.read()
 
     if frame is None:
@@ -33,9 +33,9 @@ def main():
         urllib.request.urlretrieve(WEIGHTS_DOWNLOAD_DIR, WEIGHTS_PATH)
 
     height, width, layers = frame.shape
-    height = int((height / 2))  # For test videos, comment out for cameras
+    #height = int((height / 2))  # For test videos, comment out for cameras
 
-    options = {"model": MODEL_PATH, "load": WEIGHTS_PATH, "threshold": 0.3, "gpu": 0.8}
+    options = {"model": MODEL_PATH, "load": WEIGHTS_PATH, "threshold": 0.3, "gpu": 0.8, "demo":"camera"}
 
     tfnet = TFNet(options)
 
