@@ -64,13 +64,13 @@ def main():
             top = max(0, np.floor(y + 0.5).astype(int))
             left = max(0, np.floor(x + 0.5).astype(int))
             right = min(width, np.floor(w + 0.5).astype(int))
-            bottom = min(int((height / 2)), np.floor(h + 0.5).astype(int))
+            bottom = min(height, np.floor(h + 0.5).astype(int))
 
             cv2.rectangle(lane_image, (left, top), (right, bottom), (0, 255, 0), 1)
             cv2.putText(lane_image, result['label'], (left, top), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 0), 1,
                         cv2.LINE_AA)
 
-        cv2.imshow("lane", lane_image)
+        cv2.imshow("Press A for obj. detection, B for lane detection, Q for quit", lane_image)
 
         key = cv2.waitKey(110)
         if key == ord("a"):
